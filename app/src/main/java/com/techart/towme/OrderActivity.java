@@ -18,7 +18,7 @@ public class OrderActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityOrderBinding binding;
-    private Map<String, Service> serviceList = new HashMap<>();
+    private final Map<String, Service> serviceList = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class OrderActivity extends AppCompatActivity {
         binding.btStartOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent orderActivity = new Intent(OrderActivity.this, MapsActivity.class);
+                Intent orderActivity = new Intent(OrderActivity.this, LocationQueryActivity.class);
                 startActivity(orderActivity);
             }
         });

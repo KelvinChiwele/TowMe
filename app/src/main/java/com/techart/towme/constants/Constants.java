@@ -8,7 +8,12 @@ package com.techart.towme.constants;
 
 public class Constants {
     //Profile
+    public static final String IS_FIND_ME = "LOCATION_TYPE";
+
+
     public static final String USER_URL = "userUrl";
+
+
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "surname";
     public static final String NRC = "nrc";

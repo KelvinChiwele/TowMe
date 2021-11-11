@@ -37,6 +37,7 @@ public class SecondFragment extends Fragment {
 //                NavHostFragment.findNavController(SecondFragment.this)
 //                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
                 Intent orderActivity = new Intent(getActivity(), PaymentActivity.class);
+                orderActivity.putExtra("amount", 15.0);
                 startActivity(orderActivity);
             }
         });

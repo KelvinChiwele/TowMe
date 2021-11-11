@@ -1,12 +1,26 @@
 package com.techart.towme;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,26 +28,46 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.techart.towme.constants.Constants;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
 
+
     private GoogleMap mMap;
     private LatLng location;
 
+    FusedLocationProviderClient fusedLocationProviderClient;
+
+
     private static final int PLACE_PICKER_REQUEST = 1;
     private FloatingActionButton fab;
+    private boolean isFindMe;
+    List<Address> addresses;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        isFindMe = getIntent().getBooleanExtra(Constants.IS_FIND_ME, false);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -49,8 +83,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                 finish();
             }
         });
-    }
 
+    }
 
     /**
      * Manipulates the map once available.
@@ -65,37 +99,45 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng lusaka = new LatLng(-15.6026746, 28.3380676);
+        if (!isFindMe) {
+            // Add a marker in Sydney and move the camera
+            LatLng lusaka = new LatLng(-15.6026746, 28.3380676);
 
-        mMap.addMarker(new MarkerOptions()
-                .position(lusaka)
-                .title("Marker in Lusaka")
-                .draggable(true));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(8));
-        mMap.setOnMarkerClickListener(this);
+            mMap.addMarker(new MarkerOptions()
+                    .position(lusaka)
+                    .title("Marker in Lusaka")
+                    .draggable(isFindMe));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(8));
 
 
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-            @Override
-            public void onMarkerDragStart(Marker arg0) {
-            }
+            mMap.setOnMarkerClickListener(this);
 
-            @SuppressWarnings("unchecked")
-            @Override
-            public void onMarkerDragEnd(Marker arg0) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(arg0.getPosition()));
-                location = arg0.getPosition();
-            }
 
-            @Override
-            public void onMarkerDrag(Marker arg0) {
-            }
-        });
+            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker arg0) {
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void onMarkerDragEnd(Marker arg0) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(arg0.getPosition()));
+                    location = arg0.getPosition();
+                }
+
+                @Override
+                public void onMarkerDrag(Marker arg0) {
+                }
+            });
+        } else {
+            getLocation();
+        }
     }
 
-    /** Called when the user clicks a marker. */
+    /**
+     * Called when the user clicks a marker.
+     */
     @Override
     public boolean onMarkerClick(final Marker marker) {
 
@@ -116,5 +158,112 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         // for the default behavior to occur (which is for the camera to move such that the
         // marker is centered and for the marker's info window to open, if it has one).
         return false;
+    }
+
+
+    private void requestPermission() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            getLocation();
+            Toast.makeText(this,
+                    "Allowed ",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
+            Toast.makeText(this,
+                    "Denied ",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void getLocation() {
+
+        //get location
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<Location> task) {
+                    Location location = task.getResult();
+                    if (location != null) {
+                        try {
+                            Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
+                            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+
+                            LatLng lusaka = new LatLng(location.getLatitude(), location.getLongitude());
+
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(lusaka)
+                                    .title("Marker in Lusaka"));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(8));
+
+                            locationDetails();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
+            Toast.makeText(this,
+                    "Denied ",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getLocation();
+        } else {
+            onPermissionDenied();
+        }
+    }
+
+    private void locationDetails() {
+        DialogInterface.OnClickListener dialogClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int button) {
+                        if (button == DialogInterface.BUTTON_POSITIVE) {
+                        }
+                        if (button == DialogInterface.BUTTON_NEGATIVE) {
+                            dialog.dismiss();
+                        }
+                    }
+                };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("CONFIRM YOUR LOCATION!")
+                .setMessage("You are located in " + addresses.get(0).getCountryName() + " " + addresses.get(0).getLocality() + " " + addresses.get(0).getFeatureName() + " " + addresses.get(0).getAdminArea())
+                .setNegativeButton("CONFIRM", dialogClickListener)
+                .setNegativeButton("DECLINE", dialogClickListener)
+                .show();
+    }
+
+    private void onPermissionDenied() {
+        DialogInterface.OnClickListener dialogClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int button) {
+                        if (button == DialogInterface.BUTTON_POSITIVE) {
+                            ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
+                        }
+                        if (button == DialogInterface.BUTTON_NEGATIVE) {
+                            dialog.dismiss();
+                        }
+                    }
+                };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("YOU NEED TO ALLOW ACCESS TO YOUR LOCATION")
+                .setMessage("Without this permission your location will not be accessed")
+                .setPositiveButton("ALLOW", dialogClickListener)
+                .setNegativeButton("DENY", dialogClickListener)
+                .show();
     }
 }
