@@ -8,8 +8,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -20,6 +18,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,21 +33,28 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.techart.towme.constants.Constants;
+import com.techart.towme.constants.FireBaseUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
 
 
     private GoogleMap mMap;
-    private LatLng location;
+    private LatLng location = new LatLng(-15.6026746, 28.3380676);
 
     FusedLocationProviderClient fusedLocationProviderClient;
+
+    private LocationCallback locationCallback;
+
+    private Location mLastKnownLocation;
 
 
     private static final int PLACE_PICKER_REQUEST = 1;
@@ -60,8 +68,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         isFindMe = getIntent().getBooleanExtra(Constants.IS_FIND_ME, false);
+        String orderUrl = getIntent().getStringExtra("orderUrl");
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -73,12 +81,9 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent data = new Intent();
-//                data.putExtra(Constants.LATITUDE,String.valueOf(location.latitude));
-//                data.putExtra(Constants.LONGITUDE, String.valueOf(location.longitude));
-//                setResult(RESULT_OK,data);
-//                finish();
+                updateOrder(mLastKnownLocation, orderUrl);
                 Intent orderActivity = new Intent(MapsActivity.this, DetailsActivity.class);
+                orderActivity.putExtra("orderUrl", orderUrl);
                 startActivity(orderActivity);
                 finish();
             }
@@ -106,7 +111,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
             mMap.addMarker(new MarkerOptions()
                     .position(lusaka)
                     .title("Marker in Lusaka")
-                    .draggable(isFindMe));
+                    .draggable(true));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(8));
 
@@ -131,9 +136,11 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                 }
             });
         } else {
-            getLocation();
+//            getLocation();
+            getDeviceLocation();
         }
     }
+
 
     /**
      * Called when the user clicks a marker.
@@ -161,21 +168,21 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     }
 
 
-    private void requestPermission() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            getLocation();
-            Toast.makeText(this,
-                    "Allowed ",
-                    Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
-            Toast.makeText(this,
-                    "Denied ",
-                    Toast.LENGTH_LONG).show();
-        }
-    }
+//    private void requestPermission() {
+//        if (ActivityCompat.checkSelfPermission(this,
+//                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            getLocation();
+//            Toast.makeText(this,
+//                    "Allowed ",
+//                    Toast.LENGTH_LONG).show();
+//        } else {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
+//            Toast.makeText(this,
+//                    "Denied ",
+//                    Toast.LENGTH_LONG).show();
+//        }
+//    }
 
     private void getLocation() {
 
@@ -183,6 +190,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<Location> task) {
@@ -193,7 +201,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
                             LatLng lusaka = new LatLng(location.getLatitude(), location.getLongitude());
-
                             mMap.addMarker(new MarkerOptions()
                                     .position(lusaka)
                                     .title("Marker in Lusaka"));
@@ -205,6 +212,25 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                    } else {
+
+//                        final LocationRequest locationRequest = LocationRequest.create();
+//                        locationRequest.setInterval(10000);
+//                        locationRequest.setFastestInterval(5000);
+//                        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//                        locationCallback = new LocationCallback() {
+//                            @Override
+//                            public void onLocationResult(LocationResult locationResult) {
+//                                super.onLocationResult(locationResult);
+//                                if (locationResult == null) {
+//                                    return;
+//                                }
+//                                mLastKnownLocation = locationResult.getLastLocation();
+//                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+//                                mFusedLocationProviderClient.removeLocationUpdates(locationCallback);
+//                            }
+//                        };
+//                        mFusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
                     }
                 }
             });
@@ -214,6 +240,69 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                     "Denied ",
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getDeviceLocation() {
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            mLastKnownLocation = task.getResult();
+                            if (location != null) {
+
+                                LatLng lusaka = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                                mMap.addMarker(new MarkerOptions()
+                                        .position(lusaka)
+                                        .title("Marker in Lusaka"));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
+                                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+                                locationDetails();
+                            } else {
+                                final LocationRequest locationRequest = LocationRequest.create();
+                                locationRequest.setInterval(1000);
+                                locationRequest.setFastestInterval(5000);
+                                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                locationCallback = new LocationCallback() {
+                                    @Override
+                                    public void onLocationResult(LocationResult locationResult) {
+                                        super.onLocationResult(locationResult);
+                                        if (locationResult == null) {
+                                            return;
+                                        }
+
+                                        mLastKnownLocation = locationResult.getLastLocation();
+                                        LatLng lusaka = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(lusaka)
+                                                .title("Marker in Lusaka"));
+                                        mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
+                                        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+                                        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+                                    }
+                                };
+                                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+
+                            }
+                        } else {
+                            Toast.makeText(MapsActivity.this, "Unable to get last location", Toast.LENGTH_SHORT).show();
+//                            LatLng lusaka = new LatLng(-15.6026746, 28.3380676);
+//
+//                            mMap.addMarker(new MarkerOptions()
+//                                    .position(lusaka)
+//                                    .title("Marker in Lusaka")
+//                                    .draggable(isFindMe));
+//                            mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
+//                            mMap.animateCamera(CameraUpdateFactory.zoomTo(8));
+//
+//
+//                            mMap.setOnMarkerClickListener(MapsActivity.this::onMarkerClick);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -265,5 +354,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                 .setPositiveButton("ALLOW", dialogClickListener)
                 .setNegativeButton("DENY", dialogClickListener)
                 .show();
+    }
+
+
+    private void updateOrder(Location mLastKnownLocation, String orderUrl) {
+        Map<String, Object> values = new HashMap<>();
+        values.put(Constants.LATITUDE, location.latitude);
+        values.put(Constants.LONGITUDE, location.longitude);
+        FireBaseUtils.mDatabaseOrder.child(orderUrl).updateChildren(values);
     }
 }

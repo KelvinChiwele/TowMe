@@ -7,44 +7,47 @@ package com.techart.towme.constants;
  */
 
 public class Constants {
+    public static final String USERS_KEY = "USERS";
+    public static final String VEHICLE_KEY = "VEHICLE";
+    public static final String MOTORIST_KEY = "MOTORIST";
+    public static final String ORDER_KEY = "ORDER";
+    public static final String ORDER_DETAILS_KEY = "ORDER_DETAILS";
+    public static final String VEHICLE_DETAILS_KEY = "ORDER_DETAILS";
+    public static final String TRANSACTION_KEY = "TRANSACTION";
+
     //Profile
     public static final String IS_FIND_ME = "LOCATION_TYPE";
-
-
     public static final String USER_URL = "userUrl";
+    public static final String TIME_CREATED = "timeCreated";
+    public static final String USER_TYPE = "userType";
 
 
     public static final String FIRST_NAME = "firstName";
-    public static final String LAST_NAME = "surname";
-    public static final String NRC = "nrc";
-    public static final String PHONE = "phone";
-    public static final String RESIDENCE = "residence";
-    public static final String LOCATION = "location";
-    public static final String STATION = "station";
+    public static final String LAST_NAME = "lastName";
+    public static final String EMAIL = "email";
+    public static final String ADDRESS = "address";
+    public static final String PHONE_NUMBER = "phoneNumber";
+
+
+    //ORDER
+    public static final String SERVICE_NAME = "serviceName";
+    public static final String FIXED_CHARGE = "fixedCharge";
+    public static final String VARIABLE_CHARGE = "variableCharge";
+    public static final String UNIT_OF_MEASURE = "unitOfMeasure";
+    public static final String UNIT_CHARGE_NARRATION = "UnitChargeNarration";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
-    public static final String OCCURANCES_KEY = "occurences";
-    public static final String STATION_KEY = "stations";
-    public static final String COMPLAINANT_KEY = "complainant";
-    public static final String TIME_CREATED = "createdAt";
+    public static final String QUANTITY = "quantity";
+    public static final String ORDER_URL = "orderUrl";
 
-    public static final String SUBJECT = "subject";
-    public static final String SUSPECT_KEY = "suspects";
+    //VEHICLE_DETAILS
+    public static final String MAKE = "make";
+    public static final String MODEL = "model";
+    public static final String YEAR = "year";
+    public static final String COLOR = "color";
 
-    public static final String ICON = "icon";
-    public static final String PLACE = "place";
-    public static final String PARTICULARS_OF_OFFENCE = "particularOfOffence";
-    public static final String DATE = "date";
-    public static final String STATUS = "status";
-    public static final String MODE_OF_SUBMISSION = "modeOfSubmission";
-
-    // Name of Notification Channel for verbose notifications of background work
-    public static final CharSequence VERBOSE_NOTIFICATION_CHANNEL_NAME =
-            "Verbose WorkManager Notifications";
-    public static final String PROVINCE = "province";
-    public static String VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION =
-            "Shows notifications whenever work starts";
-    public static final CharSequence NOTIFICATION_TITLE = "Progress Report";
-    public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION";
-    public static final int NOTIFICATION_ID = 1;
+    //VEHICLE_DETAILS
+    public static final String LOCATION_TYPE = "make";
+    public static final String DIRECTION = "model";
+    public static final String LANE = "year";
 }

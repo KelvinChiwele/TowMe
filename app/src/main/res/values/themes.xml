@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.TowMe" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.TowMe" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -19,7 +19,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.TowMe.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.TowMe.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Theme.TowMe.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- activity login -->
+    <style name="button_style">
+        <item name="android:textColor">#FDFDFE</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>

@@ -12,28 +12,34 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".TowMe"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TowMe">
-        <activity android:name=".LocationQueryActivity"></activity>
+        <activity android:name=".SummaryActivity"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".setup.RegisterActivity" />
+        <activity android:name=".setup.LoginActivity" />
+        <activity android:name=".LocationQueryActivity" />
         <activity android:name=".LocationActivity" />
-        <activity android:name=".ui.main.PaymentActivity" />
+        <activity android:name=".ui.PaymentActivity" />
         <activity
             android:name=".DetailsActivity"
             android:label="@string/title_activity_details"
             android:theme="@style/Theme.TowMe.NoActionBar" />
-        <activity
-            android:name=".ParticularsActivity"
-            android:label="@string/title_activity_particulars"
-            android:theme="@style/Theme.TowMe.NoActionBar" />
         <activity android:name=".MapsActivity" />
-        <activity
-            android:name=".OrderDetailActivity"
-            android:label="@string/title_activity_order_detail"
-            android:theme="@style/Theme.TowMe.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -49,13 +55,6 @@
             android:name=".OrderActivity"
             android:label="@string/title_activity_order"
             android:theme="@style/Theme.TowMe.NoActionBar" />
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

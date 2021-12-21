@@ -7,8 +7,12 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import com.google.firebase.database.ServerValue;
+import com.techart.towme.constants.Constants;
+import com.techart.towme.constants.FireBaseUtils;
 import com.techart.towme.databinding.ActivityOrderBinding;
 import com.techart.towme.enums.Unit;
+import com.techart.towme.model.Order;
 import com.techart.towme.model.Service;
 
 import java.util.HashMap;
@@ -19,6 +23,10 @@ public class OrderActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityOrderBinding binding;
     private final Map<String, Service> serviceList = new HashMap<>();
+    private final Order order = new Order();
+    Service service;
+
+    private String orderUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +38,10 @@ public class OrderActivity extends AppCompatActivity {
         binding.btStartOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                postOrder(service);
                 Intent orderActivity = new Intent(OrderActivity.this, LocationQueryActivity.class);
+                orderActivity.putExtra("order", order);
+                orderActivity.putExtra("orderUrl", orderUrl);
                 startActivity(orderActivity);
             }
         });
@@ -44,7 +55,7 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public void onServiceClick(View view) {
-        Service service = new Service();
+        service = new Service();
         switch (view.getId()) {
             case R.id.bt_battery:
                 service =  serviceList.get("bt_battery");
@@ -75,12 +86,28 @@ public class OrderActivity extends AppCompatActivity {
         binding.tvPrice.setVisibility(View.VISIBLE);
 
         binding.tvPrice.setText("ZMW " + service.getFixedCharge());
-        if (!Unit.STANDARD.equals(service.getUnitOfMeasure())){
+        if (!Unit.STANDARD.equals(service.getUnitOfMeasure())) {
             binding.tvExtraCharge.setVisibility(View.VISIBLE);
             binding.tvExtraCharge.setText("+ ZMW " + service.getVariableCharge() + "/" + service.getUnitOfMeasure());
         } else {
             binding.tvExtraCharge.setVisibility(View.GONE);
         }
         binding.tvSelectedService.setText(service.getServiceName());
+
+        order.setService(service.getServiceName());
+        order.setFixedChargeNarration("+ ZMW " + service.getFixedCharge());
+        order.setTotalUnitChargeNarration("+ ZMW " + service.getVariableCharge() + "/" + service.getUnitOfMeasure());
+    }
+
+    private void postOrder(Service service) {
+        orderUrl = FireBaseUtils.mDatabaseOrder.push().getKey();
+        Map<String, Object> values = new HashMap<>();
+        values.put(Constants.SERVICE_NAME, service.getServiceName());
+        values.put(Constants.FIXED_CHARGE, service.getFixedCharge());
+        values.put(Constants.VARIABLE_CHARGE, service.getVariableCharge());
+        values.put(Constants.UNIT_OF_MEASURE, service.getUnitOfMeasure());
+        values.put(Constants.USER_URL, FireBaseUtils.getUiD());
+        values.put(Constants.TIME_CREATED, ServerValue.TIMESTAMP);
+        FireBaseUtils.mDatabaseOrder.child(orderUrl).setValue(values);
     }
 }

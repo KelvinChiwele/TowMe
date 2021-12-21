@@ -1,14 +1,13 @@
-package com.techart.towme.ui.main;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+package com.techart.towme.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.flutterwave.raveandroid.RaveConstants;
 import com.flutterwave.raveandroid.RavePayActivity;
@@ -27,12 +26,7 @@ public class PaymentActivity extends AppCompatActivity {
         TextView textViewAmount = findViewById(R.id.textViewAmount);
         textViewAmount.setText("ZMW " + amount);
 
-        pay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                makePayment(amount);
-            }
-        });
+        pay.setOnClickListener(view -> makePayment(amount));
     }
 
     private void makePayment(double amount) {

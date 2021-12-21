@@ -60,6 +60,13 @@
     <string name="order">Order</string>
     <string name="previous">Previous</string>
 
+    <!--activity login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+
+    <string name="log_in">Log in</string>
+    <string name="sign_up">Sign Up</string>
+
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_maps">ScrollingActivity</string>
@@ -158,4 +165,24 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="title_activity_details">DetailsActivity</string>
+    <string name="title_activity_summary">ScrollingActivity</string>
+    <string name="prompt_username">DIsplay Name</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="title_activity_main2">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="log_out">Log Out</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="just_now">just now</string>
+    <string name="confirm_order">Confirm Order</string>
+    <string name="get_help_now">GET HELP NOW</string>
+    <string name="fast_service">Fast Service</string>
+    <string name="service_descritption">GPS location finds the closest service provider</string>
 </resources>

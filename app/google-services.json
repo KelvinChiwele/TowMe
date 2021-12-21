@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "601940913331",
+    "project_id": "towme-e626f",
+    "storage_bucket": "towme-e626f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601940913331:android:ce69a311a779ada6ae94c6",
+        "android_client_info": {
+          "package_name": "com.techart.towme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "601940913331-bg3dn99n1jqpdpa8h968nu3ss6agrk3i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.techart.towme",
+            "certificate_hash": "db03e3a9044ae25f8e890c442c94f8db5b330945"
+          }
+        },
+        {
+          "client_id": "601940913331-9g6h4o988ajej5tpb9ttru0hnojg4gtp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbbLcycPIJFpPbsJ9U2g0j3gX5WEOjGKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "601940913331-9g6h4o988ajej5tpb9ttru0hnojg4gtp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
