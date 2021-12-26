@@ -42,6 +42,7 @@ public class Constants {
     public static final String TRANSACTION_TIME = "transactionTime";
     public static final String MODE_OF_PAYMENT = "modeOfPayment";
     public static final String AMOUNT_PAID = "amountPaid";
+    public static final String AMOUNT_TO_PAY = "amountToPay";
     public static final String ORDER_URL = "orderUrl";
     public static final String STATUS = "status";
 

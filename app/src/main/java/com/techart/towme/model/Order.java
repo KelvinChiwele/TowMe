@@ -11,6 +11,8 @@ public class Order implements Serializable {
     private double fixedCharge;
     private double unitCharge;
     private double quantity;
+    private double amountToPay;
+    private String status;
     private String totalUnitChargeNarration;
     private double latitude;
     private double longitude;
@@ -74,6 +76,22 @@ public class Order implements Serializable {
 
     public void setQuantity(double quantity) {
         this.quantity = quantity;
+    }
+
+    public double getAmountToPay() {
+        return amountToPay;
+    }
+
+    public void setAmountToPay(double amountToPay) {
+        this.amountToPay = amountToPay;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getTotalUnitChargeNarration() {

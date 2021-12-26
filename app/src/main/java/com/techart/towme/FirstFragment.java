@@ -148,6 +148,7 @@ public class FirstFragment extends Fragment {
         quantity = etQuantity.getText().toString();
         Map<String, Object> values = new HashMap<>();
         values.put(Constants.QUANTITY, Double.parseDouble(quantity));
+        values.put(Constants.AMOUNT_TO_PAY, Double.parseDouble(quantity));
         FireBaseUtils.mDatabaseOrder.child(orderUrl).updateChildren(values);
     }
 }

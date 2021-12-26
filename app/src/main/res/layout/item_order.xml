@@ -2,11 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="7dp">
 
     <ImageView
-        android:id="@+id/iv_disease"
+        android:id="@+id/iv_type"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:adjustViewBounds="true" />
@@ -14,27 +15,66 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/iv_disease"
+        android:layout_toEndOf="@id/iv_type"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:padding="5dp">
 
-        <TextView
-            android:id="@+id/titleView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="3"
-            android:padding="3dp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/descView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:text="@string/just_now"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tv_trip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="7dp"
+                android:layout_marginRight="7dp"
+                android:paddingTop="7dp"
+                android:textAllCaps="true"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:text="@string/just_now"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="7dp"
+                android:layout_marginRight="7dp"
+                android:paddingTop="7dp"
+                android:text="@string/just_now"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="12sp"
+                app:autoSizeTextType="uniform" />
+        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

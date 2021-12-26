@@ -44,6 +44,7 @@ public class PaymentActivity extends AppCompatActivity {
         TextView textVariable = findViewById(R.id.tv_variable);
         amountDue(order, textFixedAmount, textVariable);
         if (amountDue > 0) {
+            updateOrder();
             textViewAmount.setText("ZMW " + amountDue);
             pay.setOnClickListener(view -> makePayment(amountDue));
         } else {
@@ -86,6 +87,13 @@ public class PaymentActivity extends AppCompatActivity {
         } catch (Exception e) {
             amountDue = 0;
         }
+    }
+
+
+    private void updateOrder() {
+        Map<String, Object> values = new HashMap<>();
+        values.put(Constants.AMOUNT_TO_PAY, amountDue);
+        FireBaseUtils.mDatabaseOrder.child(orderUrl).updateChildren(values);
     }
 
     private void postConfirmOrder() {
