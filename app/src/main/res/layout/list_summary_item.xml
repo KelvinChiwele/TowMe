@@ -34,6 +34,7 @@
         android:id="@+id/descView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textSize="18sp"
         android:paddingVertical="8dp"
         android:textAppearance="?attr/textAppearanceCaption"
         android:textColor="?android:attr/textColorPrimary"

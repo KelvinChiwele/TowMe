@@ -14,7 +14,7 @@
         android:paddingTop="12dp" />
 
     <Button
-        android:id="@+id/button_first"
+        android:id="@+id/bt_confirm_order"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/lv_items"

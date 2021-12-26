@@ -4,13 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.techart.towme.constants.FireBaseUtils;
 import com.techart.towme.model.MainContext;
+import com.techart.towme.model.Profile;
 import com.techart.towme.setup.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,11 +28,14 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvOrder;
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
 
+    private Profile profile;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        loadProfilePicture();
 
         btStartOrderProcess = findViewById(R.id.bt_start_order);
 
@@ -41,8 +50,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         btStartOrderProcess.setOnClickListener(view -> {
-//            Intent orderActivity = new Intent(MainActivity.this, OrderActivity.class);
-            Intent orderActivity = new Intent(MainActivity.this, SummaryActivity.class);
+            Intent orderActivity = new Intent(MainActivity.this, OrderActivity.class);
             startActivity(orderActivity);
 
         });
@@ -60,6 +68,21 @@ public class MainActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(mAuthListener);
         mainContext = MainContext.getInstance();
         mainContext.setContext(MainActivity.this);
+    }
+
+
+    private void loadProfilePicture() {
+        FireBaseUtils.mDatabaseUsers.child(FireBaseUtils.getUiD()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                profile = Profile.getInstance();
+                Profile.setInstance(dataSnapshot.getValue(Profile.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
 

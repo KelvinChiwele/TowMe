@@ -26,8 +26,8 @@ public class SummaryAdaptor extends ArrayAdapter<SummaryItem> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_summary_item, parent, false);
         }
         // Lookup view for data population
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.titleView);
-        TextView tvDesc = (TextView) convertView.findViewById(R.id.descView);
+        TextView tvTitle = convertView.findViewById(R.id.titleView);
+        TextView tvDesc = convertView.findViewById(R.id.descView);
         // Populate the data into the template view using the data object
         tvTitle.setText(summaryItem.getTitle());
         tvDesc.setText(summaryItem.getDescription());

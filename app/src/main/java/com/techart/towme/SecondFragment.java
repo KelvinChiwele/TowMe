@@ -1,20 +1,22 @@
 package com.techart.towme;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.chip.Chip;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.techart.towme.constants.Constants;
 import com.techart.towme.constants.FireBaseUtils;
 import com.techart.towme.databinding.FragmentSecondBinding;
+import com.techart.towme.model.OrderUrl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,36 +25,68 @@ public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
     private String orderUrl;
+    private final Map<String, Object> values = new HashMap<>();
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("DATA", Context.MODE_PRIVATE);
-        orderUrl = sharedPreferences.getString("orderUrl", null);
-
-        Toast.makeText(getContext(), orderUrl, Toast.LENGTH_LONG).show();
-
-
+        loadUrl();
         binding = FragmentSecondBinding.inflate(inflater, container, false);
-
-
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         binding.buttonFirst.setOnClickListener(view1 -> {
-//                NavHostFragment.findNavController(SecondFragment.this)
-//                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+            postOrder();
             Intent orderActivity = new Intent(getActivity(), SummaryActivity.class);
-            orderActivity.putExtra("amount", 15.0);
+            orderActivity.putExtra("orderUrl", orderUrl);
             startActivity(orderActivity);
         });
 
+        binding.chipGroupItem.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId != View.NO_ID) {
+                Chip chipAnswer = view.findViewById(checkedId);
+                values.put("item", chipAnswer.getText());
+            }
+        });
+
+        binding.chipGroupLocation.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId != View.NO_ID) {
+                Chip chipAnswer = view.findViewById(checkedId);
+                values.put("location", chipAnswer.getText());
+            }
+        });
+
+        binding.chipGroupDirection.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId != View.NO_ID) {
+                Chip chipAnswer = view.findViewById(checkedId);
+                values.put("direction", chipAnswer.getText());
+            }
+        });
+
+        binding.chipGroupLane.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId != View.NO_ID) {
+                Chip chipAnswer = view.findViewById(checkedId);
+                values.put("lane", chipAnswer.getText());
+            }
+        });
+    }
+
+    private void loadUrl() {
+        FireBaseUtils.mDatabaseOrderUrl.child(FireBaseUtils.getUiD()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                OrderUrl orderUrlObj = dataSnapshot.getValue(OrderUrl.class);
+                orderUrl = orderUrlObj.getOrderUrl();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     @Override
@@ -62,13 +96,8 @@ public class SecondFragment extends Fragment {
     }
 
     private void postOrder() {
-        Map<String, Object> values = new HashMap<>();
-//        values.put(Constants.MAKE, order.getFixedCharge());
-//        values.put(Constants.MODEL, order.getTotalUnitCharge());
-//        values.put(Constants.YEAR, order);
-//        values.put(Constants.COLOR, order.getFixedChargeNarration());
         values.put(Constants.ORDER_URL, orderUrl);
-        FireBaseUtils.mDatabaseOrder.child(orderUrl).setValue(values);
+        FireBaseUtils.mDatabaseOrderDetails.child(orderUrl).setValue(values);
     }
 
 

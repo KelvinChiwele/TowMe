@@ -33,7 +33,6 @@
         <activity android:name=".setup.RegisterActivity" />
         <activity android:name=".setup.LoginActivity" />
         <activity android:name=".LocationQueryActivity" />
-        <activity android:name=".LocationActivity" />
         <activity android:name=".ui.PaymentActivity" />
         <activity
             android:name=".DetailsActivity"

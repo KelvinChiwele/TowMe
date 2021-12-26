@@ -43,4 +43,24 @@
                 android:text="Pay" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tv_fixed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="12dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        tools:text="Created: Yesterday" />
+
+    <TextView
+        android:id="@+id/tv_variable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="12dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        tools:text="Created: Yesterday" />
+
+
 </LinearLayout>

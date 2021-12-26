@@ -52,7 +52,7 @@
             android:visibility="gone" />
 
         <EditText
-            android:id="@+id/editTextNumber"
+            android:id="@+id/editTextQuantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
@@ -60,7 +60,6 @@
             android:textColor="@color/black"
             android:background="@drawable/text_box_outline"
             android:hint="Litres of fuel"
-            android:ems="10"
             android:inputType="number" />
     </LinearLayout>
 

@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_order"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
+
     <ImageView
         android:id="@+id/iv_news"
         android:layout_width="match_parent"
@@ -29,7 +35,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/oval"
             android:elevation="12dp"
-            android:text="@string/get_help_now"
+            android:text="GET HELP NOW"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/white" />
@@ -41,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:padding="5dp"
-            android:text="@string/fast_service"
+            android:text="Fast Service"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="28sp"
@@ -52,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="@string/service_descritption"
+            android:text="GPS location finds the closest service provider"
             android:textColor="@color/white"
             android:textSize="18sp" />
 

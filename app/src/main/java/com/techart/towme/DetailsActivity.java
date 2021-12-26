@@ -1,7 +1,7 @@
 package com.techart.towme;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -30,30 +30,16 @@ public class DetailsActivity extends AppCompatActivity {
         order = (Order) getIntent().getSerializableExtra("order");
         String orderUrl = getIntent().getStringExtra("orderUrl");
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences("DATA", MODE_PRIVATE);
-        sharedPreferences.edit().putString("orderUrl", orderUrl).apply();
+        Log.e("DetailsActivity", orderUrl);
+
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_details);
 
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-
-//
-//        Bundle data = new Bundle();
-//        data.putSerializable ("order", order);
-//
-//        Navigation.findNavController(this, R.id.nav_host_fragment_content_details).setGraph(R.navigation.nav_graph2, data);
-
-//        binding.fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {

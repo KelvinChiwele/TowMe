@@ -1,28 +1,39 @@
 package com.techart.towme.model;
 
+import com.techart.towme.enums.Unit;
+
 import java.io.Serializable;
 
 public class Order implements Serializable {
+    private String id;
     private String service;
     private String fixedChargeNarration;
     private double fixedCharge;
-    private double totalUnitCharge;
+    private double unitCharge;
+    private double quantity;
     private String totalUnitChargeNarration;
     private double latitude;
     private double longitude;
+    private Unit unitOfMeasure;
     private Long timeCreated;
 
     public Order() {
     }
 
-    public Order(String service, String fixedChargeNarration, double fixedCharge, double totalUnitCharge, String totalUnitChargeNarration, double latitude, double longitude) {
+    public Order(String id, String service, double fixedCharge, double unitCharge, Unit unitOfMeasure) {
+        this.id = id;
         this.service = service;
-        this.fixedChargeNarration = fixedChargeNarration;
         this.fixedCharge = fixedCharge;
-        this.totalUnitCharge = totalUnitCharge;
-        this.totalUnitChargeNarration = totalUnitChargeNarration;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.unitCharge = unitCharge;
+        this.unitOfMeasure = unitOfMeasure;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getService() {
@@ -49,12 +60,20 @@ public class Order implements Serializable {
         this.fixedCharge = fixedCharge;
     }
 
-    public double getTotalUnitCharge() {
-        return totalUnitCharge;
+    public double getUnitCharge() {
+        return unitCharge;
     }
 
-    public void setTotalUnitCharge(double totalUnitCharge) {
-        this.totalUnitCharge = totalUnitCharge;
+    public void setUnitCharge(double unitCharge) {
+        this.unitCharge = unitCharge;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
     }
 
     public String getTotalUnitChargeNarration() {
@@ -79,6 +98,14 @@ public class Order implements Serializable {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public Unit getUnitOfMeasure() {
+        return unitOfMeasure;
+    }
+
+    public void setUnitOfMeasure(Unit unitOfMeasure) {
+        this.unitOfMeasure = unitOfMeasure;
     }
 
     public Long getTimeCreated() {

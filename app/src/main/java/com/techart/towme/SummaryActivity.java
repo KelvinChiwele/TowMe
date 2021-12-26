@@ -1,7 +1,8 @@
 package com.techart.towme;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -12,53 +13,64 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.techart.towme.constants.FireBaseUtils;
 import com.techart.towme.model.Order;
+import com.techart.towme.model.Profile;
 import com.techart.towme.model.SummaryItem;
+import com.techart.towme.model.Vehicle;
+import com.techart.towme.ui.PaymentActivity;
 import com.techart.towme.ui.SummaryAdaptor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SummaryActivity extends AppCompatActivity {
-    String orderUrl;
+    private String orderUrl;
+    private Order order;
+    private Vehicle vehicle;
+    private Profile profile = Profile.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
-        orderUrl = "-MrLNTQBlx3ClR3xm-r_";
-        loadData(orderUrl);
-//        displaySummary(new Order());
+        orderUrl = getIntent().getStringExtra("orderUrl");
+        getOrderDetails(orderUrl);
+        getVehicleDetails(orderUrl);
+        profile = Profile.getInstance();
+        Button confirmOrder = findViewById(R.id.bt_confirm_order);
+
+        confirmOrder.setOnClickListener(view -> {
+            Intent orderActivity = new Intent(SummaryActivity.this, PaymentActivity.class);
+            orderActivity.putExtra("order", order);
+            orderActivity.putExtra("orderUrl", orderUrl);
+            startActivity(orderActivity);
+        });
     }
 
-    private void displaySummary(Order order) {
-//        order = new Order("Location", "Service", 0.0, 0.0, "Make", 0.9, 0.8 );
-        // Construct the data source
-
+    private void displaySummary() {
         ArrayList<SummaryItem> arrayOfUsers = new ArrayList<>(
                 Arrays.asList(
-                        new SummaryItem("LOCATION", order.getLatitude() + " " + order.getLongitude()),
-                        new SummaryItem("SERVICE", order.getService()),
-                        new SummaryItem("VEHICLE", order.getFixedChargeNarration()),
-                        new SummaryItem("CONTACT", "0979407445")));
+                        new SummaryItem("SERVICE", order.getService() + ""),
+                        new SummaryItem("VEHICLE", vehicle.getColor() + " " + vehicle.getMake() + " " + vehicle.getModel()),
+                        new SummaryItem("CONTACT", profile.getFirstName() + " " + profile.getLastName() + "\r\n" + profile.getPhoneNumber() + "\r\n" + profile.getEmail())));
 
         // Create the adapter to convert the array to views
         SummaryAdaptor adapter = new SummaryAdaptor(this, arrayOfUsers);
 
         // Attach the adapter to a ListView
-        ListView listView = (ListView) findViewById(R.id.lv_items);
+        ListView listView = findViewById(R.id.lv_items);
 
         listView.setAdapter(adapter);
     }
 
-    private void loadData(String orderUrl) {
-        Log.i("ORDER", orderUrl);
-
+    private void getOrderDetails(String orderUrl) {
         FireBaseUtils.mDatabaseOrder.child(orderUrl).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Order order = dataSnapshot.getValue(Order.class);
-                displaySummary(order);
-                Log.i("ORDER", order.toString());
+                order = dataSnapshot.getValue(Order.class);
+                if (profile != null && vehicle != null) {
+                    displaySummary();
+                }
             }
 
             @Override
@@ -66,4 +78,21 @@ public class SummaryActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void getVehicleDetails(String orderUrl) {
+        FireBaseUtils.mDatabaseVehicle.child(orderUrl).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                vehicle = dataSnapshot.getValue(Vehicle.class);
+                if (profile != null && order != null) {
+                    displaySummary();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
 }

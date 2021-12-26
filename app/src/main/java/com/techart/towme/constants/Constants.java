@@ -14,6 +14,7 @@ public class Constants {
     public static final String ORDER_DETAILS_KEY = "ORDER_DETAILS";
     public static final String VEHICLE_DETAILS_KEY = "ORDER_DETAILS";
     public static final String TRANSACTION_KEY = "TRANSACTION";
+    public static final String ORDER_URL_KEY = "ORDER_URL_KEY";
 
     //Profile
     public static final String IS_FIND_ME = "LOCATION_TYPE";
@@ -30,15 +31,19 @@ public class Constants {
 
 
     //ORDER
-    public static final String SERVICE_NAME = "serviceName";
+    public static final String SERVICE_NAME = "service";
     public static final String FIXED_CHARGE = "fixedCharge";
-    public static final String VARIABLE_CHARGE = "variableCharge";
+    public static final String UNIT_CHARGE = "unitCharge";
     public static final String UNIT_OF_MEASURE = "unitOfMeasure";
     public static final String UNIT_CHARGE_NARRATION = "UnitChargeNarration";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String QUANTITY = "quantity";
+    public static final String TRANSACTION_TIME = "transactionTime";
+    public static final String MODE_OF_PAYMENT = "modeOfPayment";
+    public static final String AMOUNT_PAID = "amountPaid";
     public static final String ORDER_URL = "orderUrl";
+    public static final String STATUS = "status";
 
     //VEHICLE_DETAILS
     public static final String MAKE = "make";

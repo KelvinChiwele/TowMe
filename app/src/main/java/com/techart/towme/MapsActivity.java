@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -46,22 +47,14 @@ import java.util.Map;
 public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
 
-
     private GoogleMap mMap;
     private LatLng location = new LatLng(-15.6026746, 28.3380676);
-
-    FusedLocationProviderClient fusedLocationProviderClient;
-
+    private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
-
     private Location mLastKnownLocation;
-
-
-    private static final int PLACE_PICKER_REQUEST = 1;
     private FloatingActionButton fab;
     private boolean isFindMe;
-    List<Address> addresses;
-
+    private List<Address> addresses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +77,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                 updateOrder(mLastKnownLocation, orderUrl);
                 Intent orderActivity = new Intent(MapsActivity.this, DetailsActivity.class);
                 orderActivity.putExtra("orderUrl", orderUrl);
+                Log.e("MapsActivity", orderUrl);
                 startActivity(orderActivity);
                 finish();
             }

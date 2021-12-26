@@ -2,6 +2,7 @@ package com.techart.towme;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,7 @@ public class LocationQueryActivity extends AppCompatActivity {
             orderActivity.putExtra(Constants.IS_FIND_ME, true);
             orderActivity.putExtra("order", order);
             orderActivity.putExtra("orderUrl", orderUrl);
+            Log.e("LocationQueryActivity", orderUrl);
             startActivity(orderActivity);
         });
 
@@ -40,6 +42,7 @@ public class LocationQueryActivity extends AppCompatActivity {
             orderActivity.putExtra(Constants.IS_FIND_ME, false);
             orderActivity.putExtra("order", order);
             orderActivity.putExtra("orderUrl", orderUrl);
+            Log.e("LocationQueryActivity", orderUrl);
             startActivity(orderActivity);
         });
 

@@ -21,6 +21,7 @@ public final class FireBaseUtils {
     static DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     public static final DatabaseReference mDatabaseUsers = database.child(Constants.USERS_KEY);
     public static final DatabaseReference mDatabaseVehicle = database.child(Constants.VEHICLE_KEY);
+    public static final DatabaseReference mDatabaseOrderUrl = database.child(Constants.ORDER_URL_KEY);
     public static final DatabaseReference mDatabaseMotorist = database.child(Constants.MOTORIST_KEY);
     public static final DatabaseReference mDatabaseOrder = database.child(Constants.ORDER_KEY);
     public static final DatabaseReference mDatabaseOrderDetails = database.child(Constants.ORDER_DETAILS_KEY);

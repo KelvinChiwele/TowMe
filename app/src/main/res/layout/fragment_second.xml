@@ -25,6 +25,7 @@
             android:text="What type of fuel do you need?" />
 
         <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:singleSelection="true">
@@ -61,6 +62,7 @@
             android:text="Select your location type" />
 
         <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:singleSelection="true">
@@ -110,6 +112,7 @@
             android:text="Which direction are you traveling in?" />
 
         <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_direction"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:singleSelection="true">
@@ -159,6 +162,7 @@
             android:text="What lane are you in?" />
 
         <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_lane"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:singleSelection="true">

@@ -182,7 +182,4 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="just_now">just now</string>
     <string name="confirm_order">Confirm Order</string>
-    <string name="get_help_now">GET HELP NOW</string>
-    <string name="fast_service">Fast Service</string>
-    <string name="service_descritption">GPS location finds the closest service provider</string>
 </resources>
