@@ -1,4 +1,4 @@
-package com.techart.towme.ui;
+package com.techart.towme;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import com.flutterwave.raveandroid.RaveConstants;
 import com.flutterwave.raveandroid.RavePayActivity;
 import com.flutterwave.raveandroid.RavePayManager;
 import com.google.firebase.database.ServerValue;
-import com.techart.towme.R;
 import com.techart.towme.constants.Constants;
 import com.techart.towme.constants.FireBaseUtils;
 import com.techart.towme.enums.Status;
@@ -83,7 +82,7 @@ public class PaymentActivity extends AppCompatActivity {
             amountDue = order.getFixedCharge() + totalUnitCharge;
 
             textFixedAmount.setText("Fixed Charge\r\t\t-\r\t\t\t\t" + order.getFixedCharge() + " * 1    \r\t\t= ZMW " + order.getFixedCharge());
-            textVariable.setText("Unit Charge  \r\t\t-\r\t\t\t\t" + order.getUnitCharge() + " * " + order.getQuantity() + "\r\t\t= ZMW " + amountDue);
+            textVariable.setText("Unit Charge  \r\t\t-\r\t\t\t\t" + order.getUnitCharge() + " * " + order.getQuantity() + "\r\t\t= ZMW " + totalUnitCharge);
         } catch (Exception e) {
             amountDue = 0;
         }

@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        loadProfilePicture();
 
         btStartOrderProcess = findViewById(R.id.bt_start_order);
 
@@ -63,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
             if (firebaseAuth.getCurrentUser() == null) {
                 Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
+            } else {
+                loadProfilePicture();
             }
         };
 

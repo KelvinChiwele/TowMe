@@ -48,7 +48,7 @@ public final class FireBaseUtils {
     @NonNull
     public static String getUiD() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        return user.getUid();
+        return user == null ? null : user.getUid();
     }
 
 

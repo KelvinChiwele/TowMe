@@ -16,7 +16,6 @@ import com.techart.towme.model.Order;
 import com.techart.towme.model.Profile;
 import com.techart.towme.model.SummaryItem;
 import com.techart.towme.model.Vehicle;
-import com.techart.towme.ui.PaymentActivity;
 import com.techart.towme.ui.SummaryAdaptor;
 
 import java.util.ArrayList;
