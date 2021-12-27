@@ -183,4 +183,5 @@
     <string name="just_now">just now</string>
     <string name="confirm_order">Confirm Order</string>
     <string name="title_activity_main3">Main3Activity</string>
+    <string name="menu_log_out">Log Out</string>
 </resources>
