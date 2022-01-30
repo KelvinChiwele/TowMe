@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "601940913331",
-    "project_id": "towme-e626f",
-    "storage_bucket": "towme-e626f.appspot.com"
+    "project_number": "729492136607",
+    "project_id": "towmekiz",
+    "storage_bucket": "towmekiz.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:601940913331:android:ce69a311a779ada6ae94c6",
+        "mobilesdk_app_id": "1:729492136607:android:14b795135aece2f61838aa",
         "android_client_info": {
-          "package_name": "com.techart.towme"
+          "package_name": "com.techart.towmekiz"
         }
       },
       "oauth_client": [
         {
-          "client_id": "601940913331-bg3dn99n1jqpdpa8h968nu3ss6agrk3i.apps.googleusercontent.com",
+          "client_id": "729492136607-ovnhc4ko74qdk7hdq3bnlfss7lv2q2p6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.techart.towme",
+            "package_name": "com.techart.towmekiz",
             "certificate_hash": "db03e3a9044ae25f8e890c442c94f8db5b330945"
           }
         },
         {
-          "client_id": "601940913331-9g6h4o988ajej5tpb9ttru0hnojg4gtp.apps.googleusercontent.com",
+          "client_id": "729492136607-9vq890roh5j1l1tlv4osq29ac2cifg4r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAbbLcycPIJFpPbsJ9U2g0j3gX5WEOjGKY"
+          "current_key": "AIzaSyBVfxSWj7lcSeRk6ni2YkNeyZbbxsmRrYw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "601940913331-9g6h4o988ajej5tpb9ttru0hnojg4gtp.apps.googleusercontent.com",
+              "client_id": "729492136607-9vq890roh5j1l1tlv4osq29ac2cifg4r.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

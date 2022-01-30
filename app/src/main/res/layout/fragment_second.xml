@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:text="What type of fuel do you need?" />
+            android:text="Will you be with the vehicle when we arrive" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_item"
@@ -35,14 +35,14 @@
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Diesel" />
+                android:text="Yes" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/ch2"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Petrol" />
+                android:text="No" />
 
         </com.google.android.material.chip.ChipGroup>
     </LinearLayout>

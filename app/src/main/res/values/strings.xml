@@ -184,4 +184,5 @@
     <string name="confirm_order">Confirm Order</string>
     <string name="title_activity_main3">Main3Activity</string>
     <string name="menu_log_out">Log Out</string>
+    <string name="menu_show_orders">Show Orders</string>
 </resources>

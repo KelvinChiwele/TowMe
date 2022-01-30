@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp"
+    android:weightSum="1"
     tools:context=".MainActivity">
 
     <androidx.cardview.widget.CardView
@@ -43,6 +44,37 @@
                 android:text="Pay" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/bt_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_weight="0.5"
+        android:text="Go to home" />
+
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="bottom"-->
+    <!--        android:weightSum="1"-->
+    <!--        android:orientation="horizontal">-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/bt_previous"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="0.5"-->
+    <!--            android:text="Previous" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/bt_home"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="bottom"-->
+    <!--            android:layout_weight="0.5"-->
+    <!--            android:text="Go to home" />-->
+    <!--    </LinearLayout>-->
 
     <TextView
         android:id="@+id/tv_fixed"

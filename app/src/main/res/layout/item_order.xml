@@ -13,6 +13,7 @@
         android:adjustViewBounds="true" />
 
     <LinearLayout
+        android:id="@+id/ll_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/iv_type"
@@ -77,4 +78,11 @@
                 app:autoSizeTextType="uniform" />
         </RelativeLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_accept"
+        style="@style/button_style"
+        android:layout_below="@id/ll_row"
+        android:text="Accept"
+        android:textStyle="bold" />
 </RelativeLayout>

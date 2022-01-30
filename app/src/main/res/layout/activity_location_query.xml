@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/oval"
             android:elevation="12dp"
-            android:text="PINK LOCATION ON MAP"
+            android:text="PICK LOCATION ON MAP"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/white" />
