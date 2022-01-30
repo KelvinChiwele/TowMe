@@ -20,9 +20,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +32,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.techart.towmekiz.constants.Constants;
 import com.techart.towmekiz.constants.FireBaseUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -45,17 +44,14 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         OnMapReadyCallback {
 
     private final LocationListener mLocationListener = location -> {
-        Toast.makeText(this, location.toString(),
-                Toast.LENGTH_LONG).show();
+
     };
     int LOCATION_REFRESH_TIME = 15000; // 15 seconds to update
     int LOCATION_REFRESH_DISTANCE = 500; // 500 meters to update
 
     private GoogleMap mMap;
-    private LatLng location = new LatLng(-15.6026746, 28.3380676);
+    private LatLng lastLocation = new LatLng(-15.6026746, 28.3380676);
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private LocationCallback locationCallback;
-    private Location mLastKnownLocation;
     private FloatingActionButton fab;
     private boolean isFindMe;
     private List<Address> addresses;
@@ -74,22 +70,16 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        
-        getPermission();
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            updateOrder(mLastKnownLocation, orderUrl);
+            updateOrder(orderUrl);
             Intent orderActivity = new Intent(MapsActivity.this, DetailsActivity.class);
             orderActivity.putExtra("orderUrl", orderUrl);
             Log.e("MapsActivity", orderUrl);
             startActivity(orderActivity);
             finish();
         });
-
-    }
-
-    private void m() {
 
     }
 
@@ -103,7 +93,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NotNull GoogleMap googleMap) {
         mMap = googleMap;
 
         if (!isFindMe) {
@@ -123,23 +113,21 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
             mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                 @Override
-                public void onMarkerDragStart(Marker arg0) {
+                public void onMarkerDragStart(@NotNull Marker arg0) {
                 }
 
-                @SuppressWarnings("unchecked")
                 @Override
-                public void onMarkerDragEnd(Marker arg0) {
+                public void onMarkerDragEnd(@NotNull Marker arg0) {
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(arg0.getPosition()));
-                    location = arg0.getPosition();
+                    lastLocation = arg0.getPosition();
                 }
 
                 @Override
-                public void onMarkerDrag(Marker arg0) {
+                public void onMarkerDrag(@NotNull Marker arg0) {
                 }
             });
         } else {
-//            getLocation();
-            getDeviceLocation();
+            getPermission();
         }
     }
 
@@ -157,10 +145,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         if (clickCount != null) {
             clickCount = clickCount + 1;
             marker.setTag(clickCount);
-            Toast.makeText(this,
-                    marker.getTitle() +
-                            " has been clicked " + clickCount + " times.",
-                    Toast.LENGTH_SHORT).show();
         }
 
         // Return false to indicate that we have not consumed the event and that we wish
@@ -170,7 +154,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     }
 
     private void getPermission() {
-
         //get location
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -179,6 +162,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
                     LOCATION_REFRESH_DISTANCE, mLocationListener);
+
+            getLocation();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
             Toast.makeText(this,
@@ -188,24 +173,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     }
 
 
-//    private void requestPermission() {
-//        if (ActivityCompat.checkSelfPermission(this,
-//                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            getLocation();
-//            Toast.makeText(this,
-//                    "Allowed ",
-//                    Toast.LENGTH_LONG).show();
-//        } else {
-//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
-//            Toast.makeText(this,
-//                    "Denied ",
-//                    Toast.LENGTH_LONG).show();
-//        }
-//    }
-
     private void getLocation() {
-
         //get location
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -218,11 +186,10 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                         Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
                         addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
-                        LatLng lusaka = new LatLng(location.getLatitude(), location.getLongitude());
+                        lastLocation = new LatLng(location.getLatitude(), location.getLongitude());
                         mMap.addMarker(new MarkerOptions()
-                                .position(lusaka)
-                                .title("Marker in Lusaka"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
+                                .position(lastLocation));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(lastLocation));
                         mMap.animateCamera(CameraUpdateFactory.zoomTo(8));
 
                         locationDetails();
@@ -230,25 +197,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else {
-
-//                        final LocationRequest locationRequest = LocationRequest.create();
-//                        locationRequest.setInterval(10000);
-//                        locationRequest.setFastestInterval(5000);
-//                        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//                        locationCallback = new LocationCallback() {
-//                            @Override
-//                            public void onLocationResult(LocationResult locationResult) {
-//                                super.onLocationResult(locationResult);
-//                                if (locationResult == null) {
-//                                    return;
-//                                }
-//                                mLastKnownLocation = locationResult.getLastLocation();
-//                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-//                                mFusedLocationProviderClient.removeLocationUpdates(locationCallback);
-//                            }
-//                        };
-//                        mFusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
                 }
             });
         } else {
@@ -257,115 +205,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                     "Denied ",
                     Toast.LENGTH_LONG).show();
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    private void getDeviceLocation() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        Toast.makeText(MapsActivity.this, "Get Device Location", Toast.LENGTH_SHORT).show();
-
-
-        fusedLocationProviderClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    // Got last known location. In some rare situations this can be null.
-                    Toast.makeText(MapsActivity.this, location.toString(), Toast.LENGTH_SHORT).show();
-                    if (location != null) {
-                        // Logic to handle location object
-                        LatLng lusaka = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                        mMap.addMarker(new MarkerOptions()
-                                .position(lusaka)
-                                .title("Marker in Lusaka"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
-                        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-                        locationDetails();
-                    } else {
-                        final LocationRequest locationRequest = LocationRequest.create();
-                        locationRequest.setInterval(1000);
-                        locationRequest.setFastestInterval(5000);
-                        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                        locationCallback = new LocationCallback() {
-                            @Override
-                            public void onLocationResult(LocationResult locationResult) {
-                                super.onLocationResult(locationResult);
-                                if (locationResult == null) {
-                                    return;
-                                }
-
-                                mLastKnownLocation = locationResult.getLastLocation();
-                                LatLng lusaka = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                                mMap.addMarker(new MarkerOptions()
-                                        .position(lusaka)
-                                        .title("Marker in Lusaka"));
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
-                                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-                                fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-                            }
-                        };
-                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                    }
-                });
-
-
-//                .addOnCompleteListener(new OnCompleteListener<Location>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Location> task) {
-//                        if (task.isSuccessful()) {
-//                            mLastKnownLocation = task.getResult();
-//                            if (location != null) {
-//
-//                                LatLng lusaka = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-//                                mMap.addMarker(new MarkerOptions()
-//                                        .position(lusaka)
-//                                        .title("Marker in Lusaka"));
-//                                mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
-//                                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-//
-//                                locationDetails();
-//                            } else {
-//                                final LocationRequest locationRequest = LocationRequest.create();
-//                                locationRequest.setInterval(1000);
-//                                locationRequest.setFastestInterval(5000);
-//                                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//                                locationCallback = new LocationCallback() {
-//                                    @Override
-//                                    public void onLocationResult(LocationResult locationResult) {
-//                                        super.onLocationResult(locationResult);
-//                                        if (locationResult == null) {
-//                                            return;
-//                                        }
-//
-//                                        mLastKnownLocation = locationResult.getLastLocation();
-//                                        LatLng lusaka = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-//                                        mMap.addMarker(new MarkerOptions()
-//                                                .position(lusaka)
-//                                                .title("Marker in Lusaka"));
-//                                        mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
-//                                        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-//
-//                                        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-//                                    }
-//                                };
-//                                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
-//
-//                            }
-//                        } else {
-//                            Toast.makeText(MapsActivity.this, "Unable to get last location", Toast.LENGTH_SHORT).show();
-////                            LatLng lusaka = new LatLng(-15.6026746, 28.3380676);
-////
-////                            mMap.addMarker(new MarkerOptions()
-////                                    .position(lusaka)
-////                                    .title("Marker in Lusaka")
-////                                    .draggable(isFindMe));
-////                            mMap.moveCamera(CameraUpdateFactory.newLatLng(lusaka));
-////                            mMap.animateCamera(CameraUpdateFactory.zoomTo(8));
-////
-////
-////                            mMap.setOnMarkerClickListener(MapsActivity.this::onMarkerClick);
-//                        }
-//                    }
-//                });
     }
 
     @Override
@@ -380,35 +219,30 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
     private void locationDetails() {
         DialogInterface.OnClickListener dialogClickListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int button) {
-                        if (button == DialogInterface.BUTTON_POSITIVE) {
-                        }
-                        if (button == DialogInterface.BUTTON_NEGATIVE) {
-                            dialog.dismiss();
-                        }
+                (dialog, button) -> {
+                    if (button == DialogInterface.BUTTON_POSITIVE) {
+                    }
+                    if (button == DialogInterface.BUTTON_NEGATIVE) {
+                        dialog.dismiss();
                     }
                 };
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("CONFIRM YOUR LOCATION!")
                 .setMessage("You are located in " + addresses.get(0).getCountryName() + " " + addresses.get(0).getLocality() + " " + addresses.get(0).getFeatureName() + " " + addresses.get(0).getAdminArea())
-                .setNegativeButton("CONFIRM", dialogClickListener)
+                .setPositiveButton("CONFIRM", dialogClickListener)
                 .setNegativeButton("DECLINE", dialogClickListener)
+                .setCancelable(false)
                 .show();
     }
 
     private void onPermissionDenied() {
         DialogInterface.OnClickListener dialogClickListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int button) {
-                        if (button == DialogInterface.BUTTON_POSITIVE) {
-                            ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
-                        }
-                        if (button == DialogInterface.BUTTON_NEGATIVE) {
-                            dialog.dismiss();
-                        }
+                (dialog, button) -> {
+                    if (button == DialogInterface.BUTTON_POSITIVE) {
+                        ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
+                    }
+                    if (button == DialogInterface.BUTTON_NEGATIVE) {
+                        dialog.dismiss();
                     }
                 };
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -419,11 +253,10 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                 .show();
     }
 
-
-    private void updateOrder(Location mLastKnownLocation, String orderUrl) {
+    private void updateOrder(String orderUrl) {
         Map<String, Object> values = new HashMap<>();
-        values.put(Constants.LATITUDE, location.latitude);
-        values.put(Constants.LONGITUDE, location.longitude);
+        values.put(Constants.LATITUDE, lastLocation.latitude);
+        values.put(Constants.LONGITUDE, lastLocation.longitude);
         FireBaseUtils.mDatabaseOrder.child(orderUrl).updateChildren(values);
     }
 }
